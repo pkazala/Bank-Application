@@ -1,0 +1,52 @@
+image: maven:latest
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  SONAR_CLI_OPTS: "-Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.projectKey=$CI_PROJECT_PATH_SLUG -Dsonar.projectName=$CI_PROJECT_NAMESPACE -Dsonar.working.directory=../target/.sonar"
+
+cache:
+  paths:
+  - .m2/repository
+
+stages:
+- build
+
+maven_package:
+  stage: build
+  script: mvn package
+  artifacts:
+    paths:
+    - target/asep-bank-*.jar
+
+sonarqube-scan:
+  stage: build
+  before_script:
+  - apt-get update
+  - apt-get -y install jq
+  script:
+  - mvn verify sonar:sonar $SONAR_CLI_OPTS
+  - export url=$(cat ../target/.sonar/report-task.txt | grep ceTaskUrl | cut -c11- ) #URL where report gets stored
+  - sleep 15s #Wait time for the report
+  - curl -k -u "$SONAR_AUTH_TOKEN":"" $url -o analysis.txt
+  - export status=$(cat analysis.txt | jq -r '.task.status') #Status as SUCCESS, CANCELED or FAILED
+  - export analysisId=$(cat analysis.txt | jq -r '.task.analysisId') #Get the analysis Id
+  - |
+    if [ "$status" == "SUCCESS" ];then
+      echo -e "SONAR ANALYSIS SUCCESSFUL...ANALYSING RESULTS";
+      curl -k -u "$SONAR_AUTH_TOKEN":"" $SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId -o result.txt; #Analysis result like critical, major and minor issues
+      export result=$(cat result.txt | jq -r '.projectStatus.status');
+      if [ "$result" == "ERROR" ];then
+        echo -e "91mSONAR RESULTS FAILED";
+        echo "$(cat result.txt | jq -r '.projectStatus.conditions')"; #prints the critical, major and minor violations
+        exit 1 #breaks the build for violations
+      else
+        echo -e "SONAR RESULTS SUCCESSFUL";
+        echo "$(cat result.txt | jq -r '.projectStatus.conditions')";
+        exit 0
+      fi
+    else
+      echo -e "\e[91mSONAR ANALYSIS FAILED\e[0m";
+      exit 1 #breaks the build for failure in Step2
+    fi
+  only:
+  - master
