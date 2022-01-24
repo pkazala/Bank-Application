@@ -15,7 +15,7 @@
         <!-- Startup class -->
         <application.class>uk.co.asepstrath.bank.App</application.class>
 
-        <jooby.version>2.3.1</jooby.version>
+        <jooby.version>2.13.0</jooby.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -43,13 +43,11 @@
         <dependency>
             <groupId>io.jooby</groupId>
             <artifactId>jooby-handlebars</artifactId>
-            <version>2.3.0</version>
         </dependency>
 
         <dependency>
             <groupId>io.jooby</groupId>
             <artifactId>jooby-hikari</artifactId>
-            <version>2.3.0</version>
         </dependency>
 
         <dependency>

@@ -2,8 +2,8 @@ package uk.co.asepstrath.bank.example;
 
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
-import io.jooby.StatusCodeException;
 import io.jooby.annotations.*;
+import io.jooby.exception.StatusCodeException;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
 
