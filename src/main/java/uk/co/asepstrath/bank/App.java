@@ -62,7 +62,12 @@ public class App extends Jooby {
             //
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE Example (Key varchar(255),Value varchar(255))");
-            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('WelcomeMessage', 'Welcome to A Bank')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Rachel','50.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Monica','100.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Phoebe','76.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Joey','23.90')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Chandler','3.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Ross','54.32')");
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }

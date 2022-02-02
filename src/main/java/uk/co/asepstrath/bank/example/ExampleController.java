@@ -6,6 +6,7 @@ import io.jooby.annotations.*;
 import io.jooby.exception.StatusCodeException;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.Account;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -57,6 +58,7 @@ public class ExampleController {
     /*
     This request makes a call to the passed in data source (The Database) which has been set up in App.java
      */
+
     @GET("/welcome")
     public String welcomeFromDB() {
         String welcomeMessageKey = "WelcomeMessage";
@@ -72,6 +74,31 @@ public class ExampleController {
             String welcomeMessage = set.getString("Value");
             // Return value
             return welcomeMessage;
+        } catch (SQLException e) {
+            // If something does go wrong this will log the stack trace
+            logger.error("Database Error Occurred",e);
+            // And return a HTTP 500 error to the requester
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
+        }
+    }
+    @GET("/viewaccounts")
+    public String accountsFromDB() {
+        // Create a connection
+        try (Connection connection = dataSource.getConnection()) {
+            // Create Statement (batch of SQL Commands)
+            Statement statement = connection.createStatement();
+            // Perform SQL Query
+            ResultSet set = statement.executeQuery("SELECT * FROM Example");
+            // Read First Result
+            String accountinfo = "";
+            while (set.next()){
+            // Extract value from Result
+            accountinfo +=  new Account(set.getString("Key"),set.getFloat("Value")).toString()+ "\n";
+            //accountinfo += set.getString("Key") + " £" +  set.getString("Value") + "\n";
+            }
+            // Return value
+
+            return  accountinfo;
         } catch (SQLException e) {
             // If something does go wrong this will log the stack trace
             logger.error("Database Error Occurred",e);
