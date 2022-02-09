@@ -39,7 +39,7 @@ public class Account {
 
     @Override
     public String toString(){
-        return  this.name + " &pound;" + this.balance;
+        return  this.name + " £" + this.balance;
     }
 
 
