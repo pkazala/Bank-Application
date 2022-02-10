@@ -1,9 +1,9 @@
 package uk.co.asepstrath.bank;
 
 public class Account {
-
-    private float balance;
     private String name;
+    private float balance;
+
 
     public Account() {
         this.balance = 0;
@@ -32,14 +32,16 @@ public class Account {
             throw new ArithmeticException("Amount to withdraw exceeds balance.");
         }
     }
-
+    public String getName() {
+        return this.name;
+    }
     public float getBalance() {
         return this.balance;
     }
 
     @Override
     public String toString(){
-        return  this.name + " £" + this.balance;
+        return this.name + " £" + this.balance;
     }
 
 

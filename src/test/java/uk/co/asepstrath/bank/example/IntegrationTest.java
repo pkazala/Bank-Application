@@ -28,4 +28,15 @@ public class IntegrationTest {
             assertEquals(StatusCode.OK.value(), rsp.code());
         }
     }
+    @Test
+    public void shouldPrintUsers(int serverPort) throws IOException {
+        Request req = new Request.Builder()
+                .url("http://localhost:" + serverPort+"/example/viewaccounts")
+                .build();
+
+        try (Response rsp = client.newCall(req).execute()) {
+            assertEquals("Welcome to Jooby!", rsp.body().string());
+            assertEquals(StatusCode.OK.value(), rsp.code());
+        }
+    }
 }

@@ -6,6 +6,7 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
+import io.jooby.json.JacksonModule;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class App extends Jooby {
         install(new UniRestExtension());
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
+        install(new JacksonModule());
 
         /*
         This will host any files in src/main/resources/assets on <host>/assets

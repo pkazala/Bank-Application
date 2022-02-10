@@ -1,5 +1,8 @@
 package uk.co.asepstrath.bank.example;
 
+
+import com.google.gson.Gson;
+
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
 import io.jooby.annotations.*;
@@ -13,9 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /*
     Example Controller is a Controller from the MVC paradigm.
@@ -81,24 +82,29 @@ public class ExampleController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
+
+
     @GET("/viewaccounts")
     public String accountsFromDB() {
         // Create a connection
+
         try (Connection connection = dataSource.getConnection()) {
             // Create Statement (batch of SQL Commands)
             Statement statement = connection.createStatement();
             // Perform SQL Query
             ResultSet set = statement.executeQuery("SELECT * FROM Example");
             // Read First Result
-            String accountinfo = "";
+            ArrayList<Account> accounts = new ArrayList<Account>();
             while (set.next()){
             // Extract value from Result
-            accountinfo +=  new Account(set.getString("Key"),set.getFloat("Value")).toString()+ "\n";
-            //accountinfo += set.getString("Key") + " £" +  set.getString("Value") + "\n";
+                accounts.add(new Account(set.getString("Key"),set.getFloat("Value")));
             }
             // Return value
+            Gson gson = new Gson();
+            String accountAsString = gson.toJson(accounts);
+            System.out.println(accountAsString);
+            return  accountAsString;
 
-            return  accountinfo;
         } catch (SQLException e) {
             // If something does go wrong this will log the stack trace
             logger.error("Database Error Occurred",e);
