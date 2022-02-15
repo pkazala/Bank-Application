@@ -206,21 +206,17 @@ public class ExampleController {
      */
     @GET("/dice")
     public ModelAndView dice(@QueryParam String name) {
-
         // If no name has been sent within the query URL
         if (name == null) {
             name = "Your";
         } else {
             name = name + "'s";
         }
-
         // we must create a model to pass to the "dice" template
         Map<String, Object> model = new HashMap<>();
         model.put("random", new Random().nextInt(6));
         model.put("name", name);
-
         return new ModelAndView("dice.hbs", model);
-
     }
 
     /*
