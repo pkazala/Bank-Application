@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Accounts</title>
+</head>
+<body>
+<table> <!-- Create Table -->
+<tr> <!-- Table Row 1 -->
+<th>Name</th> <!-- Table Header -->
+<th>Balance</th> <!-- Table Header -->
+</tr> <!-- End Table Row 1 -->
+{{#accounts}} <!-- Start looping for accounts  -->
+<tr> <!-- Table Row x -->
+<td>{{name}}</td> <!-- Take name of current instance of Account  -->
+<td>£{{balance}}</td> <!-- Take balance of current instance of Account -->
+</tr> <!-- End Table Row x -->
+{{/accounts}} <!-- End looping for accounts  -->
+
+</table>
+</body>
+</html>

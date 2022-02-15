@@ -6,6 +6,7 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
+import io.jooby.json.JacksonModule;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class App extends Jooby {
         install(new UniRestExtension());
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
+        install(new JacksonModule());
 
         /*
         This will host any files in src/main/resources/assets on <host>/assets
@@ -62,7 +64,12 @@ public class App extends Jooby {
             //
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE Example (Key varchar(255),Value varchar(255))");
-            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('WelcomeMessage', 'Welcome to A Bank')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Rachel','50.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Monica','100.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Phoebe','76.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Joey','23.90')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Chandler','3.00')");
+            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('Ross','54.32')");
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
