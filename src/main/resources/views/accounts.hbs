@@ -7,13 +7,19 @@
 <body>
 <table> <!-- Create Table -->
 <tr> <!-- Table Row 1 -->
+<th>ID</th> <!-- Table Header -->
 <th>Name</th> <!-- Table Header -->
 <th>Balance</th> <!-- Table Header -->
+<th>Currency</th> <!-- Table Header -->
+<th>accountType</th> <!-- Table Header -->
 </tr> <!-- End Table Row 1 -->
 {{#accounts}} <!-- Start looping for accounts  -->
 <tr> <!-- Table Row x -->
+<td>{{id}}</td> <!-- Take id of current instance of Account  -->
 <td>{{name}}</td> <!-- Take name of current instance of Account  -->
-<td>£{{balance}}</td> <!-- Take balance of current instance of Account -->
+<td>{{currency}}</td> <!-- Take currency of current instance of Account  -->
+<td>{{balance}}</td> <!-- Take balance of current instance of Account -->
+<td>{{accountType}}</td> <!-- Take accountType of current instance of Account -->
 </tr> <!-- End Table Row x -->
 {{/accounts}} <!-- End looping for accounts  -->
 

@@ -1,22 +1,50 @@
 package uk.co.asepstrath.bank;
 
 public class Account {
+    private String id;
     private String name;
     private float balance;
+    private String currency;
+    private String accountType;
 
-
-    public Account() {
-        this.balance = 0;
-        this.name="";
+    public Account(String id, String name, float balance, String currency, String accountType) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+        this.currency = currency;
+        this.accountType = accountType;
     }
 
-    public Account(float b) {
-        this.balance = b;
-        this.name="";
+    public String getId() {
+        return this.id;
     }
-    public Account(String name,float b) {
-        this.name=name;
-        this.balance = b;
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public float getBalance() {
+        return this.balance;
+    }
+
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getAccountType() {
+        return this.accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 
     public void deposit(double amount) {
@@ -32,17 +60,10 @@ public class Account {
             throw new ArithmeticException("Amount to withdraw exceeds balance.");
         }
     }
-    public String getName() {
-        return this.name;
-    }
-    public float getBalance() {
-        return this.balance;
-    }
 
     @Override
     public String toString(){
-        return this.name + " £" + this.balance;
+        return this.name + this.currency + this.balance;
     }
-
 
 }
