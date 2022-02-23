@@ -63,7 +63,7 @@ public class Account {
 
     @Override
     public String toString(){
-        return this.name + this.currency + this.balance;
+        return this.id + " " + this.name + " " + this.currency + " " + this.balance + " " + this.accountType;
     }
 
 }

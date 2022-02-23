@@ -21,6 +21,7 @@ import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 
 public class App extends Jooby {
 
@@ -59,6 +60,13 @@ public class App extends Jooby {
     }
 
     /*
+    This method verifies that names will not break the SQL entering.
+    */
+    public String SQLverify (String paramter){
+        return paramter.replace("'", "''");
+    }
+
+    /*
     This function will be called when the application starts up,
     it should be used to ensure that the DB is properly setup
      */
@@ -70,20 +78,18 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         // Open Connection to DB
         try (Connection connection = ds.getConnection()) {
-            //
+            //initialise the array
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE Example (id varchar(255), name varchar(255), balance varchar(255), currency varchar(255), accountType varchar(255))");
-            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('7fd45a98-96eb-4777-8525-6696ded416bd', 'Alexa Ferry', '43806.89', 'PKR', 'Money Market Account')");
-
-            //HttpResponse<JsonNode> response = Unirest.get("http://api.asep-strath.co.uk/api/team4/accounts").asJson();
-
-            //JSONObject myObj = response.getBody().getObject();
-
-            //System.out.println(myObj.getString("id"));
-
-            //JSONArray test = myObj.getJSONArray();
-
-
+            stmt.executeUpdate("CREATE TABLE Accounts (id varchar(255), name varchar(255), balance varchar(255), currency varchar(255), accountType varchar(255))");
+            HttpResponse<JsonNode> response = Unirest.get("http://api.asep-strath.co.uk/api/team4/accounts").asJson();
+            JSONArray accountsArray = response.getBody().getArray();
+            for (int i = 0; i < accountsArray.length(); i++) {
+                JSONObject tempaccount = accountsArray.getJSONObject(i);
+                stmt.addBatch("INSERT INTO Accounts " + "VALUES ('" + tempaccount.getString("id") + "', '"
+                        + SQLverify(tempaccount.getString("name")) + "', '" + tempaccount.getString("balance") +"', '"
+                        + tempaccount.getString("currency")+"', '"+tempaccount.getString("accountType")+"')");
+            }
+            stmt.executeBatch();
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
