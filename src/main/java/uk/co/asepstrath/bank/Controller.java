@@ -121,7 +121,6 @@ public class Controller {
             return new ModelAndView("accounts.hbs", model);
 
     }
-
     //this method works with the /viewaccounts/input method of specification where input is name
     //this is to match with video week 4, probably should be removed for marking maybe, stored somewhere else for later
     //it only runs if a name is specified which is why a normal method is still needed
