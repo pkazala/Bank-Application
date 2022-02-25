@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+
+<body>
+<h2>{{story}}</h2>
+<h2>Total no of transactions{{transaction}}</h2>
+<table> <!-- Create Table -->
+<tr> <!-- Table Row 1 -->
+<th>Balance Before</th> <!-- Table Header -->
+<th>Balance After</th> <!-- Table Header -->
+<th>No of Transactions</th> <!-- Table Header -->
+<th>No of failed transactions</th> <!-- Table Header -->
+</tr> <!-- End Table Row 1 -->
+{{#accounts}}
+<tr> <!-- Table Row x -->
+<td>{{balanceBefore}}</td>
+<td>{{balanceAfter}}</td>
+<td>{{noOfTransactions}}</td>
+<td>{{noOfFailedTransactions}}</td>
+</tr> <!-- End Table Row x -->
+{{/accounts}}
+
+</table>
+</body>
+</html>
