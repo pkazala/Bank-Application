@@ -75,7 +75,7 @@ public class Controller {
 
     @GET("/Story1")
     public ModelAndView accountsFromAPIHTML(@QueryParam String name)  {
-        // Access the api returning a json reponse
+        // Access the api returning a json response
         HttpResponse<JsonNode> response = Unirest.get("http://api.asep-strath.co.uk/api/team4/accounts").asJson();
         // Extract the json data in the JSONArrayformat
         JSONArray jsonAccounts = response.getBody().getArray();
@@ -116,6 +116,7 @@ public class Controller {
             Map<String, Object> model = new HashMap<>();
             // Add the ArrayList to the map with name accounts which will be used in accounts.hbs to loop
             model.put("accounts", getAccountsSQL(name));
+            // Add the header to distinguish between the different stories
             model.put("story", "This is the latest record in our SQL database, Story 2");
             // Return value which has the handlebars with map of Accounts
             return new ModelAndView("accounts.hbs", model);
@@ -136,7 +137,6 @@ public class Controller {
     @GET("/viewaccountsjson")
     public String accountsFromDB(@QueryParam String name) {
             // Creates a Gson (which is a Json format) object and populates with the Arraylist
-        System.out.println(getAccountsSQL(name).size());
             String accountAsString = new Gson().toJson(getAccountsSQL(name));
             // Return value
             return  accountAsString;
