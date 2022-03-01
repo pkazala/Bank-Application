@@ -176,7 +176,11 @@ public class Controller {
                         set.getString("accountType"), Integer.valueOf(set.getString("noOfTransactions")), Integer.valueOf(set.getString("noOfFailedTransactions"))));
             }
 
-            transactionsMap = ProcessTransactions.processTransactions(accounts, transactions);
+            String fraudResponse = Unirest.get("http://api.asep-strath.co.uk/api/team4/fraud").header("accept", "application/json").asString().getBody();
+
+            String fraudArray[] = fraudResponse.replace("[", "").replace("]", "").replaceAll("\"", "").split(",");
+
+            transactionsMap = ProcessTransactions.processTransactions(accounts, transactions, fraudArray);
 
             Map<String, Object> model = new HashMap<>();
             ArrayList<Transactions> updatedTransactions = new ArrayList<Transactions>();
@@ -213,7 +217,16 @@ public class Controller {
             }
 
             model.put("accounts", updatedTransactions);
-            model.put("transaction", ProcessTransactions.getNoOfTransactions());
+
+            int totalNoOfTransactions = 0;
+
+            for(Transactions element: updatedTransactions) {
+
+                totalNoOfTransactions += element.getNoOfTransactions();
+
+            }
+
+            model.put("transaction", totalNoOfTransactions);
             model.put("story", "This is the latest record in our SQL database, Transaction Information");
 
             return new ModelAndView("transactions.hbs", model);
@@ -269,7 +282,6 @@ public class Controller {
 
     }
 
-    @GET("/viewtransactionsjson")
     public String viewTransactionsFromDBJson(@QueryParam String id) {
 
         try (Connection connection = dataSource.getConnection()) {

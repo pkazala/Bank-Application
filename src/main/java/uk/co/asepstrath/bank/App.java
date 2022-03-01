@@ -107,8 +107,6 @@ public class App extends Jooby {
             HttpResponse<JsonNode> transactionsResponse = Unirest.get("http://api.asep-strath.co.uk/api/team4/transactions?PageSize=999").asJson();
             JSONArray transactionArray = transactionsResponse.getBody().getArray();
 
-            HttpResponse<JsonNode> fraudResponse = Unirest.get("http://api.asep-strath.co.uk/api/team4/fraud").asJson();
-
             for (int i = 0; i < transactionArray.length(); i++) {
                 JSONObject tempaccount = transactionArray.getJSONObject(i);
 
@@ -121,7 +119,11 @@ public class App extends Jooby {
             }
             stmt.executeBatch();
 
-            HashMap<Transaction, Account> toProcess = ProcessTransactions.processTransactions(accounts, transactions);
+            String fraudResponse = Unirest.get("http://api.asep-strath.co.uk/api/team4/fraud").header("accept", "application/json").asString().getBody();
+
+            String fraudArray[] = fraudResponse.replace("[", "").replace("]", "").replaceAll("\"", "").split(",");
+
+            HashMap<Transaction, Account> toProcess = ProcessTransactions.processTransactions(accounts, transactions, fraudArray);
 
             for(Map.Entry<Transaction, Account> set: toProcess.entrySet()) {
 
