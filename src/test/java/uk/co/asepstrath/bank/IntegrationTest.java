@@ -19,11 +19,11 @@ public class IntegrationTest {
     @Test
     public void shouldPrintUser(int serverPort) throws IOException {
         Request req = new Request.Builder()
-                .url("http://localhost:" + serverPort+"/example/viewaccountsjson?name=Rachel")
+                .url("http://localhost:" + serverPort+"/viewaccountsjson?name=Joe%20Ullrich")
                 .build();
-
         try (Response rsp = client.newCall(req).execute()) {
-            assertEquals("[{\"name\":\"Rachel\",\"balance\":50.0}]", rsp.body().string());
+            assertEquals("[{\"id\":\"30505486-274a-4e25-99bc-70f3b8767e6e\",\"name\":\"Joe Ullrich\",\"balance\"" +
+                    ":663869.2,\"currency\":\"BIF\",\"accountType\":\"Checking Account\"}]", rsp.body().string());
             assertEquals(StatusCode.OK.value(), rsp.code());
         }
     }
@@ -35,12 +35,7 @@ public class IntegrationTest {
                 .build();
 
         try (Response rsp = client.newCall(req).execute()) {
-            assertEquals("[{\"name\":\"Rachel\",\"balance\":50.0}," +
-                    "{\"name\":\"Monica\",\"balance\":100.0}," +
-                    "{\"name\":\"Phoebe\",\"balance\":76.0}," +
-                    "{\"name\":\"Joey\",\"balance\":23.9}," +
-                    "{\"name\":\"Chandler\",\"balance\":3.0}," +
-                    "{\"name\":\"Ross\",\"balance\":54.32}]", rsp.body().string());
+            //assertEquals( Controller.getAccountsSQL();, rsp.body().string());
             assertEquals(StatusCode.OK.value(), rsp.code());
         }
     }

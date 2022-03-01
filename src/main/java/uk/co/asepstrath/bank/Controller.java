@@ -39,7 +39,7 @@ public class Controller {
     This method takes a query with a specified name and returns the SQL results (all if name not specified) back as an
     ArrayList which is then used differently by handlers and java endpoints alike
      */
-    private ArrayList<Account> getAccountsSQL(String name){
+    public ArrayList<Account> getAccountsSQL(String name){
         // Create a connection
         try (Connection connection = dataSource.getConnection()) {
             // Create Statement (batch of SQL Commands)
@@ -72,10 +72,7 @@ public class Controller {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
-
-    @GET("/Story1")
-    public ModelAndView accountsFromAPIHTML(@QueryParam String name)  {
-        // Access the api returning a json response
+    public ArrayList<Account> getAccountsAPI(String name){
         HttpResponse<JsonNode> response = Unirest.get("http://api.asep-strath.co.uk/api/team4/accounts").asJson();
         // Extract the json data in the JSONArrayformat
         JSONArray jsonAccounts = response.getBody().getArray();
@@ -95,50 +92,43 @@ public class Controller {
             for(int i = 0; i< jsonAccounts.length();i++) {
                 // Extract value from Result as an Account class and adds to ArrayList
                 if (jsonAccounts.getJSONObject(i).getString("name").equals(name)){
-                accounts.add (new Account(jsonAccounts.getJSONObject(i).getString("id"), jsonAccounts.getJSONObject(i).getString("name"),
-                        jsonAccounts.getJSONObject(i).getFloat("balance"), jsonAccounts.getJSONObject(i).getString("currency") ,
-                        jsonAccounts.getJSONObject(i).getString("accountType")));
-            }}
+                    accounts.add (new Account(jsonAccounts.getJSONObject(i).getString("id"), jsonAccounts.getJSONObject(i).getString("name"),
+                            jsonAccounts.getJSONObject(i).getFloat("balance"), jsonAccounts.getJSONObject(i).getString("currency") ,
+                            jsonAccounts.getJSONObject(i).getString("accountType")));
+                }}
         }
-
-        // Initialises Map model which is <String, Object> to match ModelAndView parameters
+        return accounts;
+    }
+    /* This method is for getting accounts, it also checks if the API is available, and if not it will access the
+    pre-existing SQL data base and retreive data from there while also informing the user of where the data came from*/
+    public Map<String, Object> getAccounts(String name){
         Map<String, Object> model = new HashMap<>();
-        // Add the ArrayList to the map with name accounts which will be used in accounts.hbs to loop
-        model.put("accounts", accounts);
-        // Add the header to distinguish between the different stories
-        model.put("story", "This is the latest record from the team4 bank API, Story 1");
-        // Return value which has the handlebars with map of Accounts
-        return new ModelAndView("accounts.hbs", model);
-    }
-
-    @GET("/Story2")
-    public ModelAndView accountsFromDBHTML(@QueryParam String name) {
-            Map<String, Object> model = new HashMap<>();
-            // Add the ArrayList to the map with name accounts which will be used in accounts.hbs to loop
+        // Checks if the API is available then acts accordingly
+        if (Unirest.get("http://api.asep-strath.co.uk/api/team4/accounts").asJson().getStatus()==200){
+            model.put("accounts", getAccountsAPI(name));
+            model.put("story", "This is the latest record from the team4 bank API, Story 1");
+        }
+        else {
             model.put("accounts", getAccountsSQL(name));
-            // Add the header to distinguish between the different stories
-            model.put("story", "This is the latest record in our SQL database, Story 2");
-            // Return value which has the handlebars with map of Accounts
-            return new ModelAndView("accounts.hbs", model);
-
+            model.put("story","This is the latest record from the SQL data base as the API was not available, Story 2");
+        }
+        return model;
     }
+    @Path("/viewaccounts/{name}")
+    @GET("/viewaccounts")
+    public ModelAndView displayAccounts(@PathParam("name") @QueryParam String name)  {
+        // Return value which has the handlebars with map of Accounts
+        return new ModelAndView("accounts.hbs", getAccounts(name));
+    }
+
     //this method works with the /viewaccounts/input method of specification where input is name
     //this is to match with video week 4, probably should be removed for marking maybe, stored somewhere else for later
     //it only runs if a name is specified which is why a normal method is still needed
-    @GET
-    @Path("/viewaccounts/{name}")
-    public String accountFromDB(@PathParam("name") String name) {
-            // get the ArrayList containing required results from the SQL database and set to string
-            String accountAsString = new Gson().toJson(getAccountsSQL(name));
-            // Return value
-            return  accountAsString;
-    }
 
     @GET("/viewaccountsjson")
     public String accountsFromDB(@QueryParam String name) {
             // Creates a Gson (which is a Json format) object and populates with the Arraylist
             String accountAsString = new Gson().toJson(getAccountsSQL(name));
-            // Return value
             return  accountAsString;
     }
 
