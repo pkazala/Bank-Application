@@ -25,11 +25,14 @@ tr:hover {background-color: #D3D3D3;}
 </style>
 
 <head>
-       <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
 </head>
 
 <body>
 <h2>{{story}}</h2>
+<div align="left">
+    <input type="text" id="search" onkeyup="myFunction()" placeholder="Search name..">
+</div>
 <table id="accounts" class="display table table-bordered"> <!-- Create Table -->
     <thead>
         <tr> <!-- Table Row 1 -->
@@ -126,7 +129,19 @@ tr:hover {background-color: #D3D3D3;}
         display_table();
 
     });
-    </script>
+</script>
+
+<script>
+    $(document).ready(function(){
+      $("#search").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#accounts tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+
+</script>
 
 </body>
 
