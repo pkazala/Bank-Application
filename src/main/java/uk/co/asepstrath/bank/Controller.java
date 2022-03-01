@@ -101,12 +101,13 @@ public class Controller {
             }}
         }
 
+
         // Initialises Map model which is <String, Object> to match ModelAndView parameters
         Map<String, Object> model = new HashMap<>();
         // Add the ArrayList to the map with name accounts which will be used in accounts.hbs to loop
         model.put("accounts", accounts);
         // Add the header to distinguish between the different stories
-        model.put("story", "This is the latest record from the team4 bank API, Story 1");
+        model.put("story", "This is the latest record from the Team4 Bank API - Story 1");
         // Return value which has the handlebars with map of Accounts
         return new ModelAndView("accounts.hbs", model);
     }
@@ -116,7 +117,7 @@ public class Controller {
             Map<String, Object> model = new HashMap<>();
             // Add the ArrayList to the map with name accounts which will be used in accounts.hbs to loop
             model.put("accounts", getAccountsSQL(name));
-            model.put("story", "This is the latest record in our SQL database, Story 2");
+            model.put("story", "This is the latest record in our SQL database - Story 2");
             // Return value which has the handlebars with map of Accounts
             return new ModelAndView("accounts.hbs", model);
 
