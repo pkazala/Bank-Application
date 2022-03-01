@@ -26,12 +26,14 @@ tr:hover {background-color: #D3D3D3;}
 
 <head>
     <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
 </head>
 
 <body>
 <h2>{{story}}</h2>
 <div align="left">
     <input type="text" id="search" onkeyup="myFunction()" placeholder="Search name..">
+    <button id="bt">Export All</button>
 </div>
 <table id="accounts" class="display table table-bordered"> <!-- Create Table -->
     <thead>
@@ -60,6 +62,19 @@ tr:hover {background-color: #D3D3D3;}
     <a href="#" class="paginate" id="previous">[Previous]</a>
     <a href="#" class="paginate" id="next">[Next]</a>
 </div>
+
+<script>
+
+$(document).ready(function () {
+    $('#bt').click(function () {
+        $("#accounts").table2excel({
+        filename: "DATA.xls"
+        });
+    });
+});
+
+</script>
+
 
 <script>
         $(document).ready(function () {
@@ -142,6 +157,7 @@ tr:hover {background-color: #D3D3D3;}
     });
 
 </script>
+
 
 </body>
 
