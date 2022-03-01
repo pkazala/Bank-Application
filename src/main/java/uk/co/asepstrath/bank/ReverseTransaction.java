@@ -6,10 +6,7 @@ import kong.unirest.Unirest;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ReverseTransaction {
 
@@ -99,6 +96,18 @@ public class ReverseTransaction {
                     " WHERE id = '" + deposit.getId() + "'";
             stmt.executeUpdate(sql);
         }
+
+        /*
+        Creates a new transaction of the reversed transaction
+        I think I'm creating the timestamp correctly, and I'm not sure on how new IDs are created, so I'm reusing the old one since it was deleted
+         */
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        sql = "INSERT INTO Transactions " + "VALUES ('" + toReverse.getDepositAccount() + "', '"
+                + toReverse.getWithdrawAccount() + "', '" + currentTime + "', '"
+                + toReverse.getId() + "', '" + toReverse.getAmount() + "', '" + toReverse.getCurrency() + "')";
+        stmt.executeUpdate(sql);
+
+        System.out.println("Created new opposite transaction");
 
     }
 
