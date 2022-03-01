@@ -1,31 +1,21 @@
 package uk.co.asepstrath.bank;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
-import kong.unirest.ObjectMapper;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import uk.co.asepstrath.bank.Controller;
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.*;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
 import io.jooby.json.JacksonModule;
-
 import javax.sql.DataSource;
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.DriverManager;
-import java.util.concurrent.TimeUnit;
 
 public class App extends Jooby {
-
     {
         /*
         This section is used for setting up the Jooby Framework modules
@@ -34,13 +24,11 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
         install(new JacksonModule());
-
         /*
         This will host any files in src/main/resources/assets on <host>/assets
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
          */
         assets("/assets/*", "/assets");
-
         /*
         Now we set up our controllers and their dependencies
          */
@@ -91,12 +79,10 @@ public class App extends Jooby {
                         + tempaccount.getString("currency")+"', '"+tempaccount.getString("accountType")+"')");
             }
             stmt.executeBatch();
-
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
     }
-
     /*
     This function will be called when the application shuts down
      */
