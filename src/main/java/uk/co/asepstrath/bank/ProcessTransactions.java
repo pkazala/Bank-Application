@@ -64,6 +64,10 @@ public class ProcessTransactions {
 
             }
 
+            if(continueFlag) {
+                continue;
+            }
+
             withdrawalAccount.withdraw(transaction.getAmount());
             withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
 
