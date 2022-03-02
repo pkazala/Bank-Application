@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+
+<body>
+<h2>{{story}}</h2>
+<table> <!-- Create Table -->
+<tr> <!-- Table Row 1 -->
+<th>Withdraw Account</th> <!-- Table Header -->
+<th>Deposit Account</th> <!-- Table Header -->
+<th>Timestamp</th> <!-- Table Header -->
+<th>Id</th> <!-- Table Header -->
+<th>Amount</th> <!-- Table Header -->
+<th>Currency</th> <!-- Table Header -->
+</tr> <!-- End Table Row 1 -->
+{{#transactions}}
+<tr> <!-- Table Row x -->
+<td>{{withdrawAccount}}</td>
+<td>{{depositAccount}}</td>
+<td>{{timestamp}}</td>
+<td>{{id}}</td>
+<td>{{amount}}</td>
+<td>{{currency}}</td>
+</tr> <!-- End Table Row x -->
+{{/transactions}}
+
+</table>
+</body>
+</html>
