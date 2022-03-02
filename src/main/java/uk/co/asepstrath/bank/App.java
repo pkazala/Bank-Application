@@ -1,23 +1,16 @@
 package uk.co.asepstrath.bank;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
-import kong.unirest.ObjectMapper;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import uk.co.asepstrath.bank.Controller;
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.*;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
 import io.jooby.json.JacksonModule;
-
 import javax.sql.DataSource;
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,7 +20,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class App extends Jooby {
-
     {
         /*
         This section is used for setting up the Jooby Framework modules
@@ -36,13 +28,11 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
         install(new JacksonModule());
-
         /*
         This will host any files in src/main/resources/assets on <host>/assets
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
          */
         assets("/assets/*", "/assets");
-
         /*
         Now we set up our controllers and their dependencies
          */
@@ -52,7 +42,7 @@ public class App extends Jooby {
         mvc(new Controller(ds,log));
 
         /*
-        Finally we register our application lifecycle methods
+        Finally, we register our application lifecycle methods
          */
         onStarted(() -> onStart());
         onStop(() -> onStop());
@@ -76,12 +66,11 @@ public class App extends Jooby {
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
-
         // Fetch DB Source
         DataSource ds = require(DataSource.class);
         // Open Connection to DB
         try (Connection connection = ds.getConnection()) {
-            //initialise the array
+            // Initialise the connection
             Statement stmt = connection.createStatement();
 
             ArrayList<Account> accounts = new ArrayList<Account>();
@@ -143,7 +132,6 @@ public class App extends Jooby {
             log.error("Database Creation Error",e);
         }
     }
-
     /*
     This function will be called when the application shuts down
      */
