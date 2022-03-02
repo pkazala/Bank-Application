@@ -57,7 +57,7 @@ public class ReverseTransaction {
     Will also reverse the sides of the transactions that ARE a part of this bank
 
     I also think this could then be added as its own transaction, which itself could be reversed, but I'm not sure if that's needed
-    Also, I don't think a reversal request is needed, since on the swagger API page it just says "Notify another bank of a reversal"
+    Also, I don't think a reversal request is needed, since the user stories say to do it "If the transaction is to/from another bank"
      */
     public static void reverseValues(Transaction toReverse, Account[] accountsInBank, Statement stmt) throws SQLException {
 
@@ -187,11 +187,16 @@ public class ReverseTransaction {
                     Its used "If the transaction is to/from another bank" and we are notifying that bank
                     The API says the only parameter is the bank requesting the reversal, which is surely us?
                     But if it isn't, how do I know which bank it is from the account that isn't ours?
-                    Plus, how can it know WHICH transaction is to be reversed?
+                    I think I know how to put which transaction is being reversed and the timestamp
+                    Returns HTTP 301 Moved Permanently when I try to do the post
+                    Not sure how to solve this, it happens regardless, even when the bank doesn't exist which should return 404
                      */
-                    HttpResponse<JsonNode> reversalResponse = Unirest.post("http://api.asep-strath.co.uk/api/team4/reversal").asJson();
-                    System.out.println("Reversal success?: " + reversalResponse.isSuccess());
+                    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+                    HttpResponse<JsonNode> reversalResponse = Unirest.post("http://api.asep-strath.co.uk/api/team4/reversal")
+                            .body("{\"transaction\":\""+toReverse.getId()+"\", \"timestamp\":\""+currentTime+"\"}")
+                                    .asJson();
                     System.out.println("Reversal status: " + reversalResponse.getStatus());
+                    System.out.println("Reversal message: " + reversalResponse.getStatusText());
                 }
                 else{
                     /*
