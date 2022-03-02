@@ -6,13 +6,17 @@ public class Account {
     private float balance;
     private String currency;
     private String accountType;
+    private int noOfTransactions;
+    private int noOfFailedTransactions;
 
-    public Account(String id, String name, float balance, String currency, String accountType) {
+    public Account(String id, String name, float balance, String currency, String accountType, int noOfTransactions, int noOfFailedTransactions) {
         this.id = id;
         this.name = name;
         this.balance = balance;
         this.currency = currency;
         this.accountType = accountType;
+        this.noOfTransactions = noOfTransactions;
+        this.noOfFailedTransactions = noOfFailedTransactions;
     }
 
     public String getId() {
@@ -46,6 +50,14 @@ public class Account {
     public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
+
+    public int getNoOfTransactions() { return this.noOfTransactions; }
+
+    public void setNoOfTransactions(int noOfTransactions) { this.noOfTransactions = noOfTransactions; }
+
+    public int getNoOfFailedTransactions() {return this.noOfFailedTransactions; }
+
+    public void setNoOfFailedTransactions(int noOfFailedTransactions) { this.noOfFailedTransactions = noOfFailedTransactions; }
 
     public void deposit(double amount) {
         if (amount > 0) {
