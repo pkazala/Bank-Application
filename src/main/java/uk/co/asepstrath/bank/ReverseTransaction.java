@@ -101,7 +101,10 @@ public class ReverseTransaction {
         Creates a new transaction of the reversed transaction
         I think I'm creating the timestamp correctly, and I'm not sure on how new IDs are created, so I'm reusing the old one since it was deleted
          */
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        String currentTime = new Timestamp(System.currentTimeMillis()).toString();
+        currentTime = currentTime.replace(" ","T");
+        currentTime += "Z";
+
         sql = "INSERT INTO Transactions " + "VALUES ('" + toReverse.getDepositAccount() + "', '"
                 + toReverse.getWithdrawAccount() + "', '" + currentTime + "', '"
                 + toReverse.getId() + "', '" + toReverse.getAmount() + "', '" + toReverse.getCurrency() + "')";
@@ -183,20 +186,20 @@ public class ReverseTransaction {
 
                     /*
                     Sends reversal request
-                    I don't understand how to use this reversal request to be honest
-                    Its used "If the transaction is to/from another bank" and we are notifying that bank
-                    The API says the only parameter is the bank requesting the reversal, which is surely us?
-                    But if it isn't, how do I know which bank it is from the account that isn't ours?
-                    I think I know how to put which transaction is being reversed and the timestamp
-                    Returns HTTP 301 Moved Permanently when I try to do the post
-                    Not sure how to solve this, it happens regardless, even when the bank doesn't exist which should return 404
+                    Has to edit current timestamp to fit the format
                      */
-                    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-                    HttpResponse<JsonNode> reversalResponse = Unirest.post("http://api.asep-strath.co.uk/api/team4/reversal")
-                            .body("{\"transaction\":\""+toReverse.getId()+"\", \"timestamp\":\""+currentTime+"\"}")
+                    String currentTime = new Timestamp(System.currentTimeMillis()).toString();
+                    currentTime = currentTime.replace(" ","T");
+                    currentTime += "Z";
+                    HttpResponse<JsonNode> reversalResponse = Unirest.post("https://api.asep-strath.co.uk/api/team4/reversal")
+                            .header("Accept","*/*")
+                            .header("Content-Type","application/json")
+                            .body("{\"transaction\":\""+toReverse.getId()+"\",\"timestamp\":\""+currentTime+"\"}")
                                     .asJson();
+                    System.out.println("Timestamp: " + currentTime);
                     System.out.println("Reversal status: " + reversalResponse.getStatus());
                     System.out.println("Reversal message: " + reversalResponse.getStatusText());
+                    System.out.println("Headers: " + reversalResponse.getHeaders());
                 }
                 else{
                     /*
