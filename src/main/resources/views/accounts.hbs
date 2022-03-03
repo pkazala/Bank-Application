@@ -27,13 +27,15 @@ tr:hover {background-color: #D3D3D3;}
 <head>
     <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
 </head>
 
 <body>
 <h2>{{story}}</h2>
-<div align="left">
-    <input type="text" id="search" onkeyup="myFunction()" placeholder="Search name..">
-    <button id="bt">Export All</button>
+<div align="right">
+        <button id="bt">Export</button>
 </div>
 <table id="accounts" class="display table table-bordered"> <!-- Create Table -->
     <thead>
@@ -58,106 +60,26 @@ tr:hover {background-color: #D3D3D3;}
     {{/accounts}} <!-- End looping for accounts  -->
     </tbody>
 </table>
-<div>
-    <a href="#" class="paginate" id="previous">[Previous]</a>
-    <a href="#" class="paginate" id="next">[Next]</a>
-</div>
 
 <script>
 
 $(document).ready(function () {
     $('#bt').click(function () {
         $("#accounts").table2excel({
-        filename: "DATA.xls"
+        filename: "Accounts.xls"
         });
     });
 });
 
 </script>
 
-
-<script>
-        $(document).ready(function () {
-
-            //function that initialises the table with number of rows being displayed (20) and calls the function to paginate
-            function display_table() {
-
-                //initialising new attributes
-                $("#accounts tbody").attr("rows", 20);
-                $("#accounts tbody").attr("displayed_accounts", 0);
-
-                //converting values to integer
-                var displayed_acc = parseInt($("#accounts tbody").attr("displayed_accounts"))
-                var no_of_rows = parseInt($("#accounts tbody").attr("rows"))
-
-                //call function to paginate the table
-                paginate(displayed_acc, no_of_rows);
-
-                }
-
-            //displaying rows per page for previous and next buttons
-            $("a.paginate").click(function() {
-
-                var table_rows = $('#accounts tbody tr');
-
-                //re-fetching current values
-                var displayed_acc = parseInt($("#accounts tbody").attr("displayed_accounts"));
-                var no_of_rows = parseInt($("#accounts tbody").attr("rows"));
-
-                if ($(this).attr("id") == "previous") {
-                    if (displayed_acc - no_of_rows >= 0)
-                        displayed_acc -= no_of_rows;
-                } else if ($(this).attr("id") == "next") {
-                    if ( displayed_acc + no_of_rows <= table_rows.length )
-                        displayed_acc += no_of_rows;
-                } else {
-                    return
-                }
-
-                //setting up records list to tbody displayed_accounts attribute for current display
-                $("#accounts tbody").attr("displayed_accounts", displayed_acc);
-
-                paginate(displayed_acc, no_of_rows);
-            });
-
-            //implementing the pagination function
-            var paginate = function (displayed_acc, no_of_rows) {
-                var table_rows = $('#accounts tbody tr');
-                var new_row_count = displayed_acc + no_of_rows;
-                table_rows.hide();
-
-                //slices the table to display only the rows from next of last displayed rows to new added rows
-                table_rows.slice(displayed_acc, new_row_count).show();
-
-                $(".paginate").show();
-
-                //hide next button if rows are maxed out
-                if (new_row_count == table_rows.length)
-                    $('#next').hide();
-
-                //hide previous button if
-                if (new_row_count <= 20)
-                    $('#previous').hide();
-
-            }
-
-        display_table();
-
-    });
-</script>
-
-<script>
-    $(document).ready(function(){
-      $("#search").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#accounts tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+<script type="text/javascript">
+        $(document).ready(function(){
+         $("#accounts").DataTable({
+         "lengthMenu": [20, 40, 60, 100]
+         });
         });
-      });
-    });
-
 </script>
-
 
 </body>
 
