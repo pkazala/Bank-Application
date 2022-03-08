@@ -64,6 +64,15 @@
     display: table;
     clear: both;
   }
+  .secondrow {
+    padding-top: 20px;
+  }
+
+  .secondrow:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 
 
   label {
@@ -73,14 +82,15 @@
   }
 
   Form {
+    float: left;
     text-align: center;
     width: 40%;
     background-color: #dfdfdf;
     border-radius: 10px;
     padding: 30px;
     height: 7%;
-    margin: 0 auto;
-    margin-top: 15px;
+    margin: 5%;
+    margin-top: 0;
   }
 
   input[type=text] {
@@ -121,18 +131,36 @@
       <a href="/viewtransactions" style="text-decoration: none; color: white;">Transactions</a>
     </div>
   </div>
-  <form name="myForm">
-    <label for="name">Search for any user's account:</label><br>
-    <input type="text" name="name" placeholder="Name of the customer" value="">
-    <input class="inputbut" type="submit" value="Search">
-  </form>
+  <div class="secondrow">
+    <form name="accountForm">
+      <label for="name">Search for any user's account:</label><br>
+      <input type="text" name="name" placeholder="Name of the customer" value="">
+      <input class="inputbut" type="submit" value="Search">
+    </form>
+    <form name="reverseForm">
+      <label for="name">Reverse any transaction:</label><br>
+      <input type="text" name="name" placeholder="ID of the transaction" value="">
+      <input class="inputbut" type="submit" value="Reverse">
+    </form>
+  </div>
   <script>
-    var form = document.forms['myForm'];
+    var form = document.forms['accountForm'];
 
     form.addEventListener('submit', function () {
       var testVal = this.elements['name'].value
       if (testVal) {
         this.action = "/viewaccounts/" + testVal;
+        this.submit();
+      }
+    }, false);
+  </script>
+  <script>
+    var form = document.forms['reverseForm'];
+
+    form.addEventListener('submit', function () {
+      var testVal = this.elements['name'].value
+      if (testVal) {
+        this.action = "/reversetransaction/" + testVal;
         this.submit();
       }
     }, false);
