@@ -1,33 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-table, th, td {
-  border:1px solid black;
+table {
+  width: 50%;
 }
+
+th {
+   border: 1px solid #000;
+}
+
+td {
+
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid #000;
+  border-collapse: collapse;
+}
+
+caption {
+  padding: 0.3em;
+}
+
+tr:hover {background-color: #D3D3D3;}
 </style>
+
+<head>
+    <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+</head>
 
 <body>
 <h2>{{story}}</h2>
-<table> <!-- Create Table -->
-<tr> <!-- Table Row 1 -->
-<th>Withdraw Account</th> <!-- Table Header -->
-<th>Deposit Account</th> <!-- Table Header -->
-<th>Timestamp</th> <!-- Table Header -->
-<th>Id</th> <!-- Table Header -->
-<th>Amount</th> <!-- Table Header -->
-<th>Currency</th> <!-- Table Header -->
-</tr> <!-- End Table Row 1 -->
-{{#transactions}}
-<tr> <!-- Table Row x -->
-<td>{{withdrawAccount}}</td>
-<td>{{depositAccount}}</td>
-<td>{{timestamp}}</td>
-<td>{{id}}</td>
-<td>{{amount}}</td>
-<td>{{currency}}</td>
-</tr> <!-- End Table Row x -->
-{{/transactions}}
+<div align="right">
+    <button id="bt">Export</button>
+</div>
+<table id="viewtransactions" class="display table table-bordered"> <!-- Create Table -->
+    <thead>
+        <tr> <!-- Table Row 1 -->
+        <th>Withdraw Account</th> <!-- Table Header -->
+        <th>Deposit Account</th> <!-- Table Header -->
+        <th>Timestamp</th> <!-- Table Header -->
+        <th>Id</th> <!-- Table Header -->
+        <th>Amount</th> <!-- Table Header -->
+        <th>Currency</th> <!-- Table Header -->
+        </tr> <!-- End Table Row 1 -->
+    </thead>
+    <tbody>
+    {{#transactions}}
+        <tr> <!-- Table Row x -->
+        <td>{{withdrawAccount}}</td>
+        <td>{{depositAccount}}</td>
+        <td>{{timestamp}}</td>
+        <td>{{id}}</td>
+        <td>{{amount}}</td>
+        <td>{{currency}}</td>
+        </tr> <!-- End Table Row x -->
+    {{/transactions}}
+    </tbody>
 
 </table>
+<script>
+
+$(document).ready(function () {
+    $('#bt').click(function () {
+        $("#viewtransactions").table2excel({
+        filename: "VIEWTRANSACTIONS.xls"
+        });
+    });
+});
+
+</script>
+<script type="text/javascript">
+        $(document).ready(function(){
+         $("#viewtransactions").DataTable({
+         "lengthMenu": [20, 40, 60, 100]
+         });
+        });
+</script>
 </body>
 </html>

@@ -5,10 +5,6 @@ import java.util.HashMap;
 
 public class ProcessTransactions {
 
-    private static int noOfTransactions;
-
-    public static int getNoOfTransactions() { return noOfTransactions; }
-
     public static Account findWithdrawAccount(ArrayList<Account> accounts, String id) {
 
         for(Account account: accounts) {
@@ -39,7 +35,7 @@ public class ProcessTransactions {
         return null;
     }
 
-    public static HashMap<Transaction, Account> processTransactions(ArrayList<Account> accounts, ArrayList<Transaction> transactions) {
+    public static HashMap<Transaction, Account> processTransactions(ArrayList<Account> accounts, ArrayList<Transaction> transactions, String[] fraudAccounts) {
 
         HashMap<Transaction, Account> completedTransactions = new HashMap<Transaction, Account>();
 
@@ -54,6 +50,24 @@ public class ProcessTransactions {
 
             }
 
+            boolean continueFlag = false;
+
+            for(String element: fraudAccounts) {
+
+               if(element.equals(withdrawalAccount.getId()) || element.equals(depositAccount.getId())) {
+
+                   continueFlag = true;
+
+                   break;
+
+               }
+
+            }
+
+            if(continueFlag) {
+                continue;
+            }
+
             withdrawalAccount.withdraw(transaction.getAmount());
             withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
 
@@ -62,8 +76,6 @@ public class ProcessTransactions {
 
             completedTransactions.put(transaction, withdrawalAccount);
             completedTransactions.put(transaction, depositAccount);
-
-            noOfTransactions++;
 
         }
 
