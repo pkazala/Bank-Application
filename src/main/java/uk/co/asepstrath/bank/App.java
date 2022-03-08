@@ -1,9 +1,4 @@
 package uk.co.asepstrath.bank;
-import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
-import kong.unirest.Unirest;
-import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONObject;
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.*;
@@ -11,13 +6,6 @@ import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
 import io.jooby.json.JacksonModule;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class App extends Jooby {
     {
@@ -50,13 +38,6 @@ public class App extends Jooby {
 
     public static void main(final String[] args) {
         runApp(args, App::new);
-    }
-
-    /*
-    This method verifies that names will not break the SQL entering.
-    */
-    public String SQLverify (String paramter){
-        return paramter.replace("'", "''");
     }
 
     /*
