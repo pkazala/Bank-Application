@@ -1,0 +1,159 @@
+openapi: 3.0.1
+info:
+  title: Team 4 Bank Project
+  description: Swagger API Documentation
+  version: "1.0"
+paths:
+  /Story1:
+    get:
+      operationId: accountsFromAPIHTML
+      parameters:
+      - name: name
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelAndView'
+  /Story2:
+    get:
+      operationId: accountsFromDBHTML
+      parameters:
+      - name: name
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelAndView'
+  /viewaccounts/{name}:
+    get:
+      operationId: accountFromDB
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+  /viewaccountsjson:
+    get:
+      operationId: accountsFromDB
+      parameters:
+      - name: name
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+  /transactions:
+    get:
+      operationId: transactionsFromDB
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelAndView'
+  /viewtransactions:
+    get:
+      operationId: viewTransactionsFromDB
+      parameters:
+      - name: id
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelAndView'
+  /viewtransactionsjson:
+    get:
+      operationId: viewTransactionsFromDBJson
+      parameters:
+      - name: id
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    ModelAndView:
+      type: object
+      properties:
+        view:
+          type: string
+        model:
+          type: object
+          additionalProperties:
+            type: object
+        locale:
+          type: object
+          properties:
+            language:
+              type: string
+            displayName:
+              type: string
+            script:
+              type: string
+            country:
+              type: string
+            variant:
+              type: string
+            extensionKeys:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            unicodeLocaleAttributes:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            unicodeLocaleKeys:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            iso3Language:
+              type: string
+            iso3Country:
+              type: string
+            displayLanguage:
+              type: string
+            displayScript:
+              type: string
+            displayCountry:
+              type: string
+            displayVariant:
+              type: string
+

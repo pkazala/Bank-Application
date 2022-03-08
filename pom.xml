@@ -129,6 +129,13 @@
                 <groupId>io.jooby</groupId>
                 <artifactId>jooby-maven-plugin</artifactId>
                 <version>${jooby.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>openapi</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Build uber jar -->
             <plugin>

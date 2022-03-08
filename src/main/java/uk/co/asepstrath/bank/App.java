@@ -16,6 +16,9 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
         install(new JacksonModule());
+        install(new OpenAPIModule());
+
+
         /*
         This will host any files in src/main/resources/assets on <host>/assets
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder
