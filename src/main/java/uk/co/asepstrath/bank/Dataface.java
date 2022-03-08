@@ -301,7 +301,6 @@ public class Dataface {
         return "Data was read from the api successfully.";
     }
     public Boolean reverse(String id){
-        ReverseTransaction reverse = new ReverseTransaction();
-        return reverse.reverseTransaction(logger, dataSource, id);
+        return ReverseTransaction.reverseTransaction(logger, dataSource, id);
     }
 }
