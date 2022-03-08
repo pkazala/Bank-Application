@@ -2,6 +2,7 @@ package uk.co.asepstrath.bank;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.jooby.OpenAPIModule;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.ObjectMapper;
@@ -36,6 +37,8 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
         install(new JacksonModule());
+        install(new OpenAPIModule());
+
 
         /*
         This will host any files in src/main/resources/assets on <host>/assets
