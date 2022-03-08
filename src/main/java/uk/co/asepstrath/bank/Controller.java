@@ -21,6 +21,11 @@ public class Controller {
         data = new Dataface(ds,log);
     }
 
+    @GET("/")
+    public ModelAndView mainPage(){
+        return new ModelAndView("index.hbs");
+    }
+
     @GET("/viewaccounts")
     public ModelAndView displayAccounts(@QueryParam String name){
         // Return value which has the handlebars with map of Accounts
