@@ -24,18 +24,15 @@ public class Controller {
     @GET("/viewaccounts")
     public ModelAndView displayAccounts(@QueryParam String name){
         // Return value which has the handlebars with map of Accounts
-        return new ModelAndView("accounts.hbs", data.getAccounts(name));
+        return new ModelAndView("accounts.hbs", data.getAccounts("http://api.asep-strath.co.uk/api/team4/accounts", name));
     }
+
     @GET()
     @Path("/viewaccounts/{name}")
     public ModelAndView displayAccountss(@PathParam("name") @QueryParam String name) {
         // Return value which has the handlebars with map of Accounts
-        return new ModelAndView("accounts.hbs", data.getAccounts(name));
+        return new ModelAndView("accounts.hbs", data.getAccounts("http://api.asep-strath.co.uk/api/team4/accounts",name));
     }
-
-    //this method works with the /viewaccounts/input method of specification where input is name
-    //this is to match with video week 4, probably should be removed for marking maybe, stored somewhere else for later
-    //it only runs if a name is specified which is why a normal method is still needed
 
     @GET("/viewaccountsjson")
     public String accountsFromDB(@QueryParam String name) {
