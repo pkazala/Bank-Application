@@ -117,7 +117,7 @@ public class ReverseTransaction {
     /*
     This method reverses a transaction given its ID
     */
-    public static void reverseTransaction(Logger log, DataSource ds, String transactionID) {
+    public static boolean reverseTransaction(Logger log, DataSource ds, String transactionID) {
 
         try (Connection connection = ds.getConnection()) {
 
@@ -211,12 +211,15 @@ public class ReverseTransaction {
 
             } else {
                 log.info("Could not find given transaction.");
-                return;
+                return false;
             }
 
         } catch (SQLException e) {
             log.error("Database Creation Error", e);
+            return false;
         }
+
+        return true;
     }
 
 }

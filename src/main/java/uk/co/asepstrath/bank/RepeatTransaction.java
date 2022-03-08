@@ -24,7 +24,7 @@ public class RepeatTransaction extends ReverseTransaction{
     But then again, there's nothing about notifying another bank or anything about it, or other banks at all, so I'm not sure
 
      */
-    public static void repeatValues(Transaction toRepeat, Account[] accountsInBank, Statement stmt) throws SQLException {
+    public static boolean repeatValues(Transaction toRepeat, Account[] accountsInBank, Statement stmt) throws SQLException {
 
         String sql;
 
@@ -47,7 +47,7 @@ public class RepeatTransaction extends ReverseTransaction{
             then the transaction is cancelled and a repeated transaction is not added
              */
             if (withdraw.getBalance() < 0){
-                return;
+                return false;
             }
 
             sql = "UPDATE Accounts SET balance = " + withdraw.getBalance() + "," + "noOfTransactions = " + withdraw.getNoOfTransactions() +
@@ -80,6 +80,8 @@ public class RepeatTransaction extends ReverseTransaction{
 
         System.out.println("Created new repeated transaction");
 
+        return true;
+
     }
 
     /*
@@ -87,7 +89,7 @@ public class RepeatTransaction extends ReverseTransaction{
     Might be overcomplicated, may only need to add a new transaction to the database with the same information as the requested transaction
     Mine also updates the balances for the accounts in our bank with the new repeated transaction
     */
-    public static void repeatTransaction(Logger log, DataSource ds, String transactionID) {
+    public static boolean repeatTransaction(Logger log, DataSource ds, String transactionID) {
 
         try (Connection connection = ds.getConnection()) {
 
@@ -147,9 +149,9 @@ public class RepeatTransaction extends ReverseTransaction{
                 /*
                 If either bank isn't from our bank, one must belong to another bank
                  */
+                boolean success = false;
                 if (accountsInBank[0] == null || accountsInBank[1] == null) {
                     System.out.println("One of the accounts not in our bank.");
-                    repeatValues(toRepeat, accountsInBank, stmt);
 
                 }
                 else{
@@ -157,17 +159,24 @@ public class RepeatTransaction extends ReverseTransaction{
                     Repeats the transaction in our bank
                      */
                     System.out.println("Both in our bank!");
-                    repeatValues(toRepeat, accountsInBank, stmt);
+                }
+                success = repeatValues(toRepeat, accountsInBank, stmt);
+                if (!success){
+                    return false;
                 }
 
             } else {
                 log.info("Could not find given transaction.");
-                return;
+                return false;
             }
 
         } catch (SQLException e) {
             log.error("Database Creation Error", e);
+            return false;
         }
+
+        return true;
+
     }
 
 }
