@@ -109,19 +109,14 @@ public class Dataface {
         }
         return model;}
 
-    public Map<String,Object> getTransactions(){
+    public Map<String,Object> getTransactions(String API){
         HashMap<Transaction, Account> transactionsMap = new HashMap<Transaction, Account>();
 
         try (Connection connection = dataSource.getConnection()) {
             // Create Statement (batch of SQL Commands)
             Statement statement = connection.createStatement();
-            // Initialises SQL Query
             ResultSet set;
-            // Checks if the user has specified a name parameter
             set = statement.executeQuery("SELECT * FROM Transactions");
-
-            // Read First Result
-            // Initialises ArrayList to store Account's
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             while (set.next()){
                 // Extract value from Result as an Account class and adds to ArrayList
@@ -138,7 +133,7 @@ public class Dataface {
                         Float.valueOf(set.getString("balance")),set.getString("currency"),
                         set.getString("accountType"), Integer.valueOf(set.getString("noOfTransactions")), Integer.valueOf(set.getString("noOfFailedTransactions"))));
             }
-            String fraudResponse = Unirest.get("http://api.asep-strath.co.uk/api/team4/fraud").header("accept", "application/json").asString().getBody();
+            String fraudResponse = Unirest.get(API).header("accept", "application/json").asString().getBody();
             String fraudArray[] = fraudResponse.replace("[", "").replace("]", "").replaceAll("\"", "").split(",");
             transactionsMap = ProcessTransactions.processTransactions(accounts, transactions, fraudArray);
             Map<String, Object> model = new HashMap<>();
@@ -167,8 +162,13 @@ public class Dataface {
             for(Transactions element: updatedTransactions) {
                 totalNoOfTransactions += element.getNoOfTransactions();
             }
+            if(Unirest.get(API).asJson().getStatus() == 200) {
+                model.put("story", "This is the latest record from the API, Transaction Information");
+            } else {
+                model.put("story", "The API was not available, Transaction Information");
+            }
             model.put("transaction", totalNoOfTransactions);
-            model.put("story", "This is the latest record in our SQL database, Transaction Information");
+
             return model;
     }
         catch (SQLException e) {
@@ -203,7 +203,7 @@ public class Dataface {
             }
             Map<String, Object> model = new HashMap<>();
             model.put("transactions", transactions);
-            model.put("story", "This is the latest record in our SQL database, Story Transaction Information");
+            model.put("story", "This is the latest record in our SQL database, Transaction history story.");
             return  model;
 
         } catch (SQLException e) {

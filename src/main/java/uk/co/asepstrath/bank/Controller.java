@@ -43,7 +43,7 @@ public class Controller {
 
     @GET("/transactions")
     public ModelAndView transactionsFromDB() {
-        return new ModelAndView("transactions.hbs", data.getTransactions());
+        return new ModelAndView("transactions.hbs", data.getTransactions("http://api.asep-strath.co.uk/api/team4/fraud"));
     }
 
     @GET("/viewtransactions")
