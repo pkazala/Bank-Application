@@ -50,12 +50,12 @@ public class Controller {
         return accountAsString;
     }
 
-    @GET("/transactions")
+    @GET("/transactionsinformation")
     public ModelAndView transactionsFromDB() {
         return new ModelAndView("transactions.hbs", data.getTransactions());
     }
 
-    @GET("/viewtransactions")
+    @GET("/transactionshistory")
     public ModelAndView viewTransactionsFromDB(@QueryParam String id) {
         return new ModelAndView("viewTransactions.hbs", data.gettransactionss(id));
     }
