@@ -52,7 +52,7 @@ public class Controller {
 
     @GET("/transactionsinformation")
     public ModelAndView transactionsFromDB() {
-        return new ModelAndView("transactions.hbs", data.getTransactions());
+        return new ModelAndView("transactions.hbs", data.getTransactions("http://api.asep-strath.co.uk/api/team4/fraud"));
     }
 
     @GET("/transactionshistory")
@@ -67,7 +67,7 @@ public class Controller {
 
     @GET("/reversetransaction/{transactionid}")
     public ModelAndView reverseTransactions(@PathParam("transactionid") @QueryParam String transactionID) {
-        if (data.reverse(transactionID)) {
+        if (data.reverse(transactionID).contains("successfully")) {
             return new ModelAndView("reverseSuccess.hbs");
         } else {
             return new ModelAndView("reverseFail.hbs");
