@@ -10,6 +10,43 @@ import java.sql.*;
 
 public class ReverseTransaction {
 
+    public static Transaction findTransactionSQL(DataSource ds, Logger log, String transID){
+
+        Transaction foundTransaction = null;
+
+        try (Connection connection = ds.getConnection()) {
+
+            /*
+            Finds the transaction from the table where the id matches the transaction given
+             */
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM Transactions WHERE id = '" + transID + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            /*
+            Goes through the information returned and creates a Transaction object storing this information
+            retrievedTransaction will be set to true here if a transaction has been found
+             */
+            while (rs.next()) {
+
+                String wAccount = rs.getString("withdrawAccount");
+                String dAccount = rs.getString("depositAccount");
+                String tStamp = rs.getString("timestamp");
+                String id = rs.getString("id");
+                String amount = rs.getString("amount");
+                String currency = rs.getString("currency");
+
+                foundTransaction = new Transaction(wAccount, dAccount, tStamp, id, Float.parseFloat(amount), currency);
+            }
+            rs.close();
+        }
+        catch (SQLException e) {
+            log.error("Database Creation Error", e);
+        }
+        return foundTransaction;
+    }
+
+
     /*
     Method to find which of the two accounts involved in a transaction are in our bank
      */
@@ -117,7 +154,9 @@ public class ReverseTransaction {
     /*
     This method reverses a transaction given its ID
     */
-    public static boolean reverseTransaction(Logger log, DataSource ds, String transactionID) {
+    public static String reverseTransaction(Logger log, DataSource ds, String transactionID) {
+
+        String returnText =  "Transaction reversed successfully.";
 
         try (Connection connection = ds.getConnection()) {
 
@@ -128,37 +167,7 @@ public class ReverseTransaction {
             String sql = "SELECT * FROM Transactions WHERE id = '" + transactionID + "'";
             ResultSet rs = stmt.executeQuery(sql);
 
-            boolean retrievedTransaction = false;
-
-            /*
-            Creates empty transaction so later code can run
-             */
-            Transaction toReverse = new Transaction("", "", "", "", 0f, "");
-
-            /*
-            Goes through the information returned and creates a Transaction object storing this information
-            retrievedTransaction will be set to true here if a transaction has been found
-             */
-            while (rs.next()) {
-
-                retrievedTransaction = true;
-
-                String wAccount = rs.getString("withdrawAccount");
-                String dAccount = rs.getString("depositAccount");
-                String tStamp = rs.getString("timestamp");
-                String id = rs.getString("id");
-                String amount = rs.getString("amount");
-                String currency = rs.getString("currency");
-
-                toReverse = new Transaction(wAccount, dAccount, tStamp, id, Float.parseFloat(amount), currency);
-
-                System.out.println("Transaction with ID '" + toReverse.getId() + "':");
-                System.out.println("Withdraw Account: " + toReverse.getWithdrawAccount());
-                System.out.println("Deposit Account: " + toReverse.getDepositAccount());
-                System.out.println("Amount: " + toReverse.getAmount());
-                System.out.println("Currency: " + toReverse.getCurrency());
-            }
-            rs.close();
+            Transaction toReverse = findTransactionSQL(ds, log, transactionID);
 
             /*
             If the transaction is found, checks to see if the two accounts involved are both from our bank
@@ -167,7 +176,7 @@ public class ReverseTransaction {
             This is one part I'm not quite sure about, in that I don't know if anything needs to be done on our end
             If so, presumably we reverse what we can and the other bank does the rest?
              */
-            if (retrievedTransaction) {
+            if (toReverse != null) {
 
                 System.out.println("Transaction found!");
 
@@ -200,6 +209,8 @@ public class ReverseTransaction {
                     System.out.println("Reversal status: " + reversalResponse.getStatus());
                     System.out.println("Reversal message: " + reversalResponse.getStatusText());
                     System.out.println("Headers: " + reversalResponse.getHeaders());
+
+                    returnText += " " + reversalResponse.getStatus() + " - " + reversalResponse.getStatusText() + ".";
                 }
                 else{
                     /*
@@ -211,15 +222,15 @@ public class ReverseTransaction {
 
             } else {
                 log.info("Could not find given transaction.");
-                return false;
+                return "Could not find given transaction.";
             }
 
         } catch (SQLException e) {
             log.error("Database Creation Error", e);
-            return false;
+            return "Database Creation Error.";
         }
 
-        return true;
+        return returnText;
     }
 
 }
