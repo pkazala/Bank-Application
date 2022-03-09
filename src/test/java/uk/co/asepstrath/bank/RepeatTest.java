@@ -256,7 +256,7 @@ public class RepeatTest extends Jooby {
             Finds information about this transaction to find the accounts involved
             This is so I can edit the value of the account's balance to test what happens if they can't afford it
              */
-            Transaction found = RepeatTransaction.findTransactionSQL(ds, log, "001aa34a-7362-4138-85ea-e735c4580398");
+            Transaction found = RepeatTransaction.findTransactionSQL(ds, log, "004673de-1d13-42d9-a2fd-d68c619a9809");
             Account[] accounts = RepeatTransaction.findFromOurBank(found, connection.createStatement());
 
             Account depositAcc = accounts[0];
@@ -276,7 +276,7 @@ public class RepeatTest extends Jooby {
             Tries to make the repeated transaction, but it should fail
             It should exit returning the string "Could not afford to repeat transaction."
              */
-            String success = RepeatTransaction.repeatTransaction(log, ds, "001aa34a-7362-4138-85ea-e735c4580398");
+            String success = RepeatTransaction.repeatTransaction(log, ds, "004673de-1d13-42d9-a2fd-d68c619a9809");
             Assertions.assertEquals("Could not afford to repeat transaction.", success);
         }
         catch (SQLException e) {

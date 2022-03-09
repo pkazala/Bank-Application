@@ -96,10 +96,10 @@ public class DatafaceTest extends Jooby {
     @Test
     public void getTransactionsTester(){
         Map<String, Object> result;
-        result =  df.getAccounts("http://api.asep-strath.co.uk/api/team4/accounts",null);
-        Assertions.assertTrue(result.get("story").equals("This is the latest record from the team4 bank API, Story 1 data works"));
-        result =  df.getAccounts("",null);
-        Assertions.assertTrue(result.get("story").equals("This is the latest record from the SQL data base as the API was not available, Story 2"));
+        result =  df.getTransactions("http://api.asep-strath.co.uk/api/team4/fraud");
+        Assertions.assertTrue(result.get("story").equals("This is the latest record from the API, Transaction Information"));
+        result =  df.getTransactions("http://api.asep-strath.co.uk/api/team4/fraudasdsadsadas");
+        Assertions.assertTrue(result.get("story").equals("The API was not available, Transaction Information"));
 
     }
 
