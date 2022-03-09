@@ -68,11 +68,31 @@ public class ProcessTransactions {
                 continue;
             }
 
-            withdrawalAccount.withdraw(transaction.getAmount());
-            withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
+            try {
 
-            depositAccount.deposit(transaction.getAmount());
-            depositAccount.setNoOfTransactions(depositAccount.getNoOfTransactions() + 1);
+                withdrawalAccount.withdraw(transaction.getAmount());
+                withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
+
+            }
+
+            catch(ArithmeticException error) {
+
+                withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
+
+            }
+
+            try {
+
+                depositAccount.deposit(transaction.getAmount());
+                depositAccount.setNoOfTransactions(depositAccount.getNoOfTransactions() + 1);
+
+            }
+
+            catch(ArithmeticException error) {
+
+                depositAccount.setNoOfTransactions(depositAccount.getNoOfTransactions() + 1);
+
+            }
 
             //completedTransactions.put(transaction, withdrawalAccount);
             //completedTransactions.put(transaction, depositAccount);
