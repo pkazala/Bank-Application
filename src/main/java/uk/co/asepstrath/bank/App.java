@@ -30,7 +30,6 @@ public class App extends Jooby {
          */
         DataSource ds = require(DataSource.class);
         Logger log = getLog();
-        Dataface data = new Dataface(ds,log);
         mvc(new Controller(ds,log));
 
         /*

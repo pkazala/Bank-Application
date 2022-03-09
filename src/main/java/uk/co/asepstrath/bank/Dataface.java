@@ -116,13 +116,8 @@ public class Dataface {
         try (Connection connection = dataSource.getConnection()) {
             // Create Statement (batch of SQL Commands)
             Statement statement = connection.createStatement();
-            // Initialises SQL Query
             ResultSet set;
-            // Checks if the user has specified a name parameter
             set = statement.executeQuery("SELECT * FROM Transactions");
-
-            // Read First Result
-            // Initialises ArrayList to store Account's
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             while (set.next()){
                 // Extract value from Result as an Account class and adds to ArrayList
@@ -215,7 +210,7 @@ public class Dataface {
             }
             Map<String, Object> model = new HashMap<>();
             model.put("transactions", transactions);
-            model.put("story", "This is the latest record in our SQL database, Story Transaction Information");
+            model.put("story", "This is the latest record in our SQL database, Transaction history story.");
             return  model;
 
         } catch (SQLException e) {
