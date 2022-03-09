@@ -35,9 +35,9 @@ public class ProcessTransactions {
         return null;
     }
 
-    public static HashMap<Transaction, Account> processTransactions(ArrayList<Account> accounts, ArrayList<Transaction> transactions, String[] fraudAccounts) {
+    public static HashMap<Transaction, Account[]> processTransactions(ArrayList<Account> accounts, ArrayList<Transaction> transactions, String[] fraudAccounts) {
 
-        HashMap<Transaction, Account> completedTransactions = new HashMap<Transaction, Account>();
+        HashMap<Transaction, Account[]> completedTransactions = new HashMap<Transaction, Account[]>();
 
         for(Transaction transaction: transactions) {
 
@@ -68,14 +68,36 @@ public class ProcessTransactions {
                 continue;
             }
 
-            withdrawalAccount.withdraw(transaction.getAmount());
-            withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
+            try {
 
-            depositAccount.deposit(transaction.getAmount());
-            depositAccount.setNoOfTransactions(depositAccount.getNoOfTransactions() + 1);
+                withdrawalAccount.withdraw(transaction.getAmount());
+                withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
 
-            completedTransactions.put(transaction, withdrawalAccount);
-            completedTransactions.put(transaction, depositAccount);
+            }
+
+            catch(ArithmeticException error) {
+
+                withdrawalAccount.setNoOfTransactions(withdrawalAccount.getNoOfTransactions() + 1);
+
+            }
+
+            try {
+
+                depositAccount.deposit(transaction.getAmount());
+                depositAccount.setNoOfTransactions(depositAccount.getNoOfTransactions() + 1);
+
+            }
+
+            catch(ArithmeticException error) {
+
+                depositAccount.setNoOfTransactions(depositAccount.getNoOfTransactions() + 1);
+
+            }
+
+            //completedTransactions.put(transaction, withdrawalAccount);
+            //completedTransactions.put(transaction, depositAccount);
+            Account[] arr = {withdrawalAccount,depositAccount};
+            completedTransactions.put(transaction, arr);
 
         }
 

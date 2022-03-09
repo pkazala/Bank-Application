@@ -1,5 +1,6 @@
 package uk.co.asepstrath.bank;
 import io.jooby.Jooby;
+import io.jooby.OpenAPIModule;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.*;
 import io.jooby.hikari.HikariModule;
@@ -16,6 +17,9 @@ public class App extends Jooby {
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
         install(new JacksonModule());
+        install(new OpenAPIModule());
+
+
         /*
         This will host any files in src/main/resources/assets on <host>/assets
         For example in the dice template (dice.hbs) it references "assets/dice.png" which is in resources/assets folder

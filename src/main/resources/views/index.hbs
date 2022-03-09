@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;700&display=swap" rel="stylesheet">
+<style>
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  header {
+    padding: 40px;
+    font-family: 'Sora', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    font-size: 50px;
+  }
+
+  h1 {
+    font-family: 'Sora', sans-serif;
+    font-weight: lighter;
+    text-align: center;
+    color: black;
+    font-size: 22px;
+  }
+
+  a {
+    font-family: 'Sora', sans-serif;
+    background-color: #6b6f70;
+    border: 3px;
+    border-radius: 5px;
+    padding: 6px;
+    font-size: 18px;
+  }
+
+  a:hover {
+    background-color: #5e6061;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .column {
+    float: left;
+    text-align: center;
+    width: 30%;
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    padding: 30px;
+    height: 7%;
+    margin: 1.6%;
+  }
+
+  .row {
+    padding-top: 20px;
+  }
+
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .secondrow {
+    padding-top: 20px;
+  }
+
+  .secondrow:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+
+  label {
+    font-family: 'Sora', sans-serif;
+    font-weight: lighter;
+    font-size: 20px;
+  }
+
+  Form {
+    float: left;
+    text-align: center;
+    width: 40%;
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    padding: 30px;
+    height: 7%;
+    margin: 5%;
+    margin-top: 0;
+  }
+
+  input[type=text] {
+    width: 97%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+
+  .inputbut {
+    font-family: 'Sora', sans-serif;
+    background-color: #6b6f70;
+    color: white;
+    border: 3px;
+    border-radius: 5px;
+    padding: 6px;
+    font-size: 18px;
+  }
+
+  .inputbut:hover {
+    background-color: #5e6061;
+  }
+</style>
+
+<body>
+  <header>Bank application - Team 4</header>
+  <div class="row">
+    <div class="column">
+      <h1>View the number of transactions and the changes in balace</h1>
+      <a href="/transactionsinformation" style="text-decoration: none; color: white;">Transactions Information</a>
+    </div>
+    <div class="column">
+      <h1>View account details for all customers of the bank</h1>
+      <a href="/viewaccounts" style="text-decoration: none; color: white;">Accounts</a>
+    </div>
+    <div class="column">
+      <h1>View the history of all past transactions</h1>
+      <a href="/transactionshistory" style="text-decoration: none; color: white;">Transaction History</a>
+    </div>
+  </div>
+  <div class="secondrow">
+    <form name="accountForm">
+      <label for="name">Search for any user's account:</label><br>
+      <input type="text" name="name" placeholder="Name of the customer" value="">
+      <input class="inputbut" type="submit" value="Search">
+    </form>
+    <form name="reverseForm">
+      <label for="name">Reverse any transaction:</label><br>
+      <input type="text" name="name" placeholder="ID of the transaction" value="">
+      <input class="inputbut" type="submit" value="Reverse">
+    </form>
+  </div>
+  <script>
+    var form = document.forms['accountForm'];
+
+    form.addEventListener('submit', function () {
+      var testVal = this.elements['name'].value
+      if (testVal) {
+        this.action = "/viewaccounts/" + testVal;
+        this.submit();
+      }
+    }, false);
+  </script>
+  <script>
+    var form = document.forms['reverseForm'];
+
+    form.addEventListener('submit', function () {
+      var testVal = this.elements['name'].value
+      if (testVal) {
+        this.action = "/reversetransaction/" + testVal;
+        this.submit();
+      }
+    }, false);
+  </script>
+</body>

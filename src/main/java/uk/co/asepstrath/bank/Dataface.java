@@ -109,8 +109,9 @@ public class Dataface {
         }
         return model;}
 
+
     public Map<String,Object> getTransactions(String API){
-        HashMap<Transaction, Account> transactionsMap = new HashMap<Transaction, Account>();
+        HashMap<Transaction, Account[]> transactionsMap = new HashMap<Transaction, Account[]>();
 
         try (Connection connection = dataSource.getConnection()) {
             // Create Statement (batch of SQL Commands)
@@ -135,24 +136,27 @@ public class Dataface {
             }
             String fraudResponse = Unirest.get(API).header("accept", "application/json").asString().getBody();
             String fraudArray[] = fraudResponse.replace("[", "").replace("]", "").replaceAll("\"", "").split(",");
+
             transactionsMap = ProcessTransactions.processTransactions(accounts, transactions, fraudArray);
             Map<String, Object> model = new HashMap<>();
             ArrayList<Transactions> updatedTransactions = new ArrayList<Transactions>();
             float accountBalanceBefore, accountBalance;
             int noOfTransacitons, noOfFailedTransactions;
-            for(Map.Entry<Transaction, Account> modelSet: transactionsMap.entrySet()) {
-                if(modelSet.getKey().getWithdrawAccount() == modelSet.getValue().getId()) {
-                    accountBalanceBefore = modelSet.getValue().getBalance() + modelSet.getKey().getAmount();
-                    accountBalance = modelSet.getValue().getBalance();
-                    noOfTransacitons = modelSet.getValue().getNoOfTransactions();
-                    noOfFailedTransactions = modelSet.getValue().getNoOfFailedTransactions();
-                    updatedTransactions.add(new Transactions(accountBalanceBefore, accountBalance, noOfTransacitons, noOfFailedTransactions));
-                }
-                else {
-                    accountBalanceBefore = modelSet.getValue().getBalance();
-                    accountBalance = modelSet.getValue().getBalance() + modelSet.getKey().getAmount();
-                    noOfTransacitons = modelSet.getValue().getNoOfTransactions();
-                    noOfFailedTransactions = modelSet.getValue().getNoOfFailedTransactions();
+            for(Map.Entry<Transaction, Account[]> modelSet: transactionsMap.entrySet()) {
+
+                Account[] arr = modelSet.getValue();
+
+                for(int i = 0; i < 2; i++) {
+
+                    if (modelSet.getKey().getWithdrawAccount() == arr[i].getId()) {
+                        accountBalanceBefore = arr[i].getBalance() + modelSet.getKey().getAmount();
+                        accountBalance = arr[i].getBalance();
+                    } else {
+                        accountBalanceBefore = arr[i].getBalance();
+                        accountBalance = arr[i].getBalance() + modelSet.getKey().getAmount();
+                    }
+                    noOfTransacitons = arr[i].getNoOfTransactions();
+                    noOfFailedTransactions = arr[i].getNoOfFailedTransactions();
                     updatedTransactions.add(new Transactions(accountBalanceBefore, accountBalance, noOfTransacitons, noOfFailedTransactions));
                 }
             }
@@ -162,11 +166,13 @@ public class Dataface {
             for(Transactions element: updatedTransactions) {
                 totalNoOfTransactions += element.getNoOfTransactions();
             }
+
             if(Unirest.get(API).asJson().getStatus() == 200) {
                 model.put("story", "This is the latest record from the API, Transaction Information");
             } else {
                 model.put("story", "The API was not available, Transaction Information");
             }
+
             model.put("transaction", totalNoOfTransactions);
 
             return model;
@@ -178,6 +184,7 @@ public class Dataface {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
+
     public Map<String,Object> gettransactionss(String id){
         try (Connection connection = dataSource.getConnection()) {
             // Create Statement (batch of SQL Commands)
@@ -284,14 +291,24 @@ public class Dataface {
             stmt.executeBatch();
             String fraudResponse = Unirest.get("http://api.asep-strath.co.uk/api/team4/fraud").header("accept", "application/json").asString().getBody();
             String fraudArray[] = fraudResponse.replace("[", "").replace("]", "").replaceAll("\"", "").split(",");
-            HashMap<Transaction, Account> toProcess = ProcessTransactions.processTransactions(accounts, transactions, fraudArray);
-            for(Map.Entry<Transaction, Account> set: toProcess.entrySet()) {
-                String accountBalance = String.valueOf(set.getValue().getBalance());
-                String accountNoOfTransactions = String.valueOf(set.getValue().getNoOfTransactions());
-                String accountNoOfFailedTransactions = String.valueOf(set.getValue().getNoOfFailedTransactions());
-                stmt.addBatch("UPDATE Accounts SET balance = " + accountBalance + "," + "noOfTransactions = " + accountNoOfTransactions + "," + "noOfFailedTransactions = " + accountNoOfFailedTransactions);
+
+            HashMap<Transaction, Account[]> toProcess = ProcessTransactions.processTransactions(accounts, transactions, fraudArray);
+            for(Map.Entry<Transaction, Account[]> set: toProcess.entrySet()) {
+                Account[] arr = set.getValue();
+                for (int i = 0; i < 2; i++) {
+                    String accountId = String.valueOf(arr[i].getId());
+                    String accountBalance = String.valueOf(arr[i].getBalance());
+                    String accountNoOfTransactions = String.valueOf(arr[i].getNoOfTransactions());
+                    String accountNoOfFailedTransactions = String.valueOf(arr[i].getNoOfFailedTransactions());
+                    //stmt.addBatch("UPDATE Accounts SET balance = " + accountBalance + "," + "noOfTransactions = " + accountNoOfTransactions + "," + "noOfFailedTransactions = " + accountNoOfFailedTransactions);
+                    stmt.addBatch("UPDATE Accounts SET balance = " + accountBalance + "," + "noOfTransactions = " + accountNoOfTransactions + "," + "noOfFailedTransactions = " + accountNoOfFailedTransactions +
+                            " WHERE id = '" + accountId + "'");
+                }
             }
             stmt.executeBatch();
+
+
+
         } catch (SQLException e) {
             // If something does go wrong this will log the stack trace
             logger.error("Database Error Occurred",e);
@@ -299,5 +316,8 @@ public class Dataface {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
         return "Data was read from the api successfully.";
+    }
+    public String reverse(String id){
+        return ReverseTransaction.reverseTransaction(logger, dataSource, id);
     }
 }

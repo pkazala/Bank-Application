@@ -62,6 +62,8 @@ public class Account {
     public void deposit(double amount) {
         if (amount > 0) {
             this.balance += amount;
+        } else {
+            throw new ArithmeticException("Amount to deposit less than 0.");
         }
     }
 
