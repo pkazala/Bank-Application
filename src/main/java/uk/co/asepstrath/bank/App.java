@@ -4,10 +4,18 @@ import io.jooby.OpenAPIModule;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.*;
 import io.jooby.hikari.HikariModule;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.slf4j.Logger;
 import io.jooby.json.JacksonModule;
 import javax.sql.DataSource;
 
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Team 4 Bank Project",
+                description = "Swagger API Documentation"
+        )
+)
 public class App extends Jooby {
     {
         /*
