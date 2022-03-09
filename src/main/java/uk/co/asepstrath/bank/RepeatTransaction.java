@@ -39,16 +39,16 @@ public class RepeatTransaction extends ReverseTransaction{
         if (withdraw != null) {
             System.out.println("OLD VALUES FOR 'withdraw': balance = " + withdraw.getBalance() + ", noOfTrans = " + withdraw.getNoOfTransactions());
 
-            withdraw.withdraw(toRepeat.getAmount());
-            withdraw.setNoOfTransactions(withdraw.getNoOfTransactions() + 1);
-
             /*
             If after withdrawing, the account would have less than 0 balance (i.e. they can't afford to repeat the transaction)
             then the transaction is cancelled and a repeated transaction is not added
              */
-            if (withdraw.getBalance() < 0){
+            if (withdraw.getBalance() - toRepeat.getAmount() < 0){
                 return false;
             }
+
+            withdraw.withdraw(toRepeat.getAmount());
+            withdraw.setNoOfTransactions(withdraw.getNoOfTransactions() + 1);
 
             sql = "UPDATE Accounts SET balance = " + withdraw.getBalance() + "," + "noOfTransactions = " + withdraw.getNoOfTransactions() +
                     " WHERE id = '" + withdraw.getId() + "'";
@@ -89,7 +89,7 @@ public class RepeatTransaction extends ReverseTransaction{
     Might be overcomplicated, may only need to add a new transaction to the database with the same information as the requested transaction
     Mine also updates the balances for the accounts in our bank with the new repeated transaction
     */
-    public static boolean repeatTransaction(Logger log, DataSource ds, String transactionID) {
+    public static String repeatTransaction(Logger log, DataSource ds, String transactionID) {
 
         try (Connection connection = ds.getConnection()) {
 
@@ -100,43 +100,13 @@ public class RepeatTransaction extends ReverseTransaction{
             String sql = "SELECT * FROM Transactions WHERE id = '" + transactionID + "'";
             ResultSet rs = stmt.executeQuery(sql);
 
-            boolean retrievedTransaction = false;
-
-            /*
-            Creates empty transaction so later code can run
-             */
-            Transaction toRepeat = new Transaction("", "", "", "", 0f, "");
-
-            /*
-            Goes through the information returned and creates a Transaction object storing this information
-            retrievedTransaction will be set to true here if a transaction has been found
-             */
-            while (rs.next()) {
-
-                retrievedTransaction = true;
-
-                String wAccount = rs.getString("withdrawAccount");
-                String dAccount = rs.getString("depositAccount");
-                String tStamp = rs.getString("timestamp");
-                String id = rs.getString("id");
-                String amount = rs.getString("amount");
-                String currency = rs.getString("currency");
-
-                toRepeat = new Transaction(wAccount, dAccount, tStamp, id, Float.parseFloat(amount), currency);
-
-                System.out.println("Transaction with ID '" + toRepeat.getId() + "':");
-                System.out.println("Withdraw Account: " + toRepeat.getWithdrawAccount());
-                System.out.println("Deposit Account: " + toRepeat.getDepositAccount());
-                System.out.println("Amount: " + toRepeat.getAmount());
-                System.out.println("Currency: " + toRepeat.getCurrency());
-            }
-            rs.close();
+            Transaction toRepeat = findTransactionSQL(ds, log, transactionID);
 
             /*
             If the transaction is found, checks to see if the two accounts involved are both from our bank
             to see which ones can have their values changed
              */
-            if (retrievedTransaction) {
+            if (toRepeat != null) {
 
                 System.out.println("Transaction found!");
 
@@ -162,20 +132,21 @@ public class RepeatTransaction extends ReverseTransaction{
                 }
                 success = repeatValues(toRepeat, accountsInBank, stmt);
                 if (!success){
-                    return false;
+                    System.out.println("Could not afford to repeat transaction.");
+                    return "Could not afford to repeat transaction.";
                 }
 
             } else {
                 log.info("Could not find given transaction.");
-                return false;
+                return "Could not find given transaction.";
             }
 
         } catch (SQLException e) {
             log.error("Database Creation Error", e);
-            return false;
+            return "Database Creation Error.";
         }
 
-        return true;
+        return "Transaction repeated successfully.";
 
     }
 
