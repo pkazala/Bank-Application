@@ -103,4 +103,35 @@ public class DatafaceTest extends Jooby {
 
     }
 
+    @Test
+    public void incorrectReverseTester(){
+        String result;
+        result = ReverseTransaction.reverseTransaction(log, ds, "dkwadako");
+
+        Assertions.assertTrue(result.equals("Could not find given transaction."));
+    }
+
+    @Test
+    public void correctReverseTester(){
+        String result;
+        result = ReverseTransaction.reverseTransaction(log, ds, "0fbab39f-079e-4225-aa97-c7eb92acb0f5");
+
+        Assertions.assertEquals("Transaction reversed successfully. 202 - Accepted.", result);
+    }
+
+    @Test
+    public void incorrectRepeatTester(){
+        String result;
+        result = RepeatTransaction.repeatTransaction(log, ds, "dkwadako");
+
+        Assertions.assertTrue(result.equals("Could not find given transaction."));
+    }
+
+    @Test
+    public void correctRepeatTester(){
+        String result;
+        result = RepeatTransaction.repeatTransaction(log, ds, "0fbab39f-079e-4225-aa97-c7eb92acb0f5");
+
+        Assertions.assertEquals("Transaction repeated successfully.", result);
+    }
 }

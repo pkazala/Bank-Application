@@ -1,85 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-table {
-  width: 50%;
-}
+  table {
+    width: 50%;
+  }
 
-th {
-   border: 1px solid #000;
-}
+  th {
+    border: 1px solid #000;
+  }
 
-td {
+  td {
 
-  text-align: left;
-  vertical-align: top;
-  border: 1px solid #000;
-  border-collapse: collapse;
-}
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid #000;
+    border-collapse: collapse;
+  }
 
-caption {
-  padding: 0.3em;
-}
+  caption {
+    padding: 0.3em;
+  }
 
-tr:hover {background-color: #D3D3D3;}
+  tr:hover {
+    background-color: #D3D3D3;
+  }
 </style>
 
 <head>
-    <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-    <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+  <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+  <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 
 </head>
 
 <body>
-<h2>{{story}}</h2>
-<div align="right">
-        <button id="bt">Export</button>
-</div>
-<table id="accounts" class="display table table-bordered"> <!-- Create Table -->
+  <h2>{{story}}</h2>
+  <div align="right">
+    <a href="http://localhost:8080/">
+      <button>Go back</button></a>
+    <button id="bt">Export</button>
+  </div>
+  <table id="accounts" class="display table table-bordered">
+    <!-- Create Table -->
     <thead>
-        <tr> <!-- Table Row 1 -->
+      <tr>
+        <!-- Table Row 1 -->
         <th>ID</th> <!-- Table Header -->
         <th>Name</th> <!-- Table Header -->
         <th>Balance</th> <!-- Table Header -->
         <th>Currency</th> <!-- Table Header -->
         <th>Account Type</th> <!-- Table Header -->
-        </tr> <!-- End Table Row 1 -->
+      </tr> <!-- End Table Row 1 -->
     </thead>
     <tbody>
-    {{#accounts}} <!-- Start looping for accounts  -->
+      {{#accounts}}
+      <!-- Start looping for accounts  -->
 
-            <tr> <!-- Table Row x -->
-            <td>{{id}}</td> <!-- Take id of current instance of Account  -->
-            <td>{{name}}</td> <!-- Take name of current instance of Account  -->
-            <td>{{currency}}</td> <!-- Take currency of current instance of Account  -->
-            <td>{{balance}}</td> <!-- Take balance of current instance of Account -->
-            <td>{{accountType}}</td> <!-- Take accountType of current instance of Account -->
-            </tr> <!-- End Table Row x -->
-    {{/accounts}} <!-- End looping for accounts  -->
+      <tr>
+        <!-- Table Row x -->
+        <td>{{id}}</td> <!-- Take id of current instance of Account  -->
+        <td>{{name}}</td> <!-- Take name of current instance of Account  -->
+        <td>{{currency}}</td> <!-- Take currency of current instance of Account  -->
+        <td>{{balance}}</td> <!-- Take balance of current instance of Account -->
+        <td>{{accountType}}</td> <!-- Take accountType of current instance of Account -->
+      </tr> <!-- End Table Row x -->
+      {{/accounts}}
+      <!-- End looping for accounts  -->
     </tbody>
-</table>
+  </table>
 
-<script>
+  <script>
 
-$(document).ready(function () {
-    $('#bt').click(function () {
+    $(document).ready(function () {
+      $('#bt').click(function () {
         $("#accounts").table2excel({
-        filename: "Accounts.xls"
+          filename: "Accounts.xls"
         });
+      });
     });
-});
 
-</script>
+  </script>
 
-<script type="text/javascript">
-        $(document).ready(function(){
-         $("#accounts").DataTable({
-         "lengthMenu": [20, 40, 60, 100]
-         });
-        });
-</script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#accounts").DataTable({
+        "lengthMenu": [20, 40, 60, 100]
+      });
+    });
+  </script>
 
 </body>
 

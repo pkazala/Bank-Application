@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-table {
-  width: 50%;
-}
+    table {
+        width: 50%;
+    }
 
-th {
-   border: 1px solid #000;
-}
+    th {
+        border: 1px solid #000;
+    }
 
-td {
+    td {
 
-  text-align: left;
-  vertical-align: top;
-  border: 1px solid #000;
-  border-collapse: collapse;
-}
+        text-align: left;
+        vertical-align: top;
+        border: 1px solid #000;
+        border-collapse: collapse;
+    }
 
-caption {
-  padding: 0.3em;
-}
+    caption {
+        padding: 0.3em;
+    }
 
-tr:hover {background-color: #D3D3D3;}
+    tr:hover {
+        background-color: #D3D3D3;
+    }
 </style>
 
 <head>
-    <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -34,52 +36,57 @@ tr:hover {background-color: #D3D3D3;}
 
 <body>
 
-<h2>{{story}}</h2>
-<h2>Total no of transactions {{transaction}}</h2>
-<div align="right">
-    <button id="bt">Export</button>
-</div>
-<table id="transactions" class="display table table-bordered"> <!-- Create Table -->
-    <thead>
-        <tr> <!-- Table Row 1 -->
-        <th>Balance Before</th> <!-- Table Header -->
-        <th>Balance After</th> <!-- Table Header -->
-        <th>No of Transactions</th> <!-- Table Header -->
-        <th>No of failed transactions</th> <!-- Table Header -->
-        </tr> <!-- End Table Row 1 -->
-    </thead>
-    <tbody>
-    {{#accounts}}
-        <tr> <!-- Table Row x -->
-        <td>{{balanceBefore}}</td>
-        <td>{{balanceAfter}}</td>
-        <td>{{noOfTransactions}}</td>
-        <td>{{noOfFailedTransactions}}</td>
-        </tr> <!-- End Table Row x -->
-    {{/accounts}}
-    </tbody>
-</table>
+    <h2>{{story}}</h2>
+    <h2>Total no of transactions {{transaction}}</h2>
+    <div align="right">
+        <a href="http://localhost:8080/">
+            <button>Go back</button></a>
+        <button id="bt">Export</button>
+    </div>
+    <table id="transactions" class="display table table-bordered">
+        <!-- Create Table -->
+        <thead>
+            <tr>
+                <!-- Table Row 1 -->
+                <th>Balance Before</th> <!-- Table Header -->
+                <th>Balance After</th> <!-- Table Header -->
+                <th>No of Transactions</th> <!-- Table Header -->
+                <th>No of failed transactions</th> <!-- Table Header -->
+            </tr> <!-- End Table Row 1 -->
+        </thead>
+        <tbody>
+            {{#accounts}}
+            <tr>
+                <!-- Table Row x -->
+                <td>{{balanceBefore}}</td>
+                <td>{{balanceAfter}}</td>
+                <td>{{noOfTransactions}}</td>
+                <td>{{noOfFailedTransactions}}</td>
+            </tr> <!-- End Table Row x -->
+            {{/accounts}}
+        </tbody>
+    </table>
 
-<script>
+    <script>
 
-$(document).ready(function () {
-    $('#bt').click(function () {
-        $("#transactions").table2excel({
-        filename: "TRANSACTIONS.xls"
-        });
-    });
-});
-
-</script>
-<script type="text/javascript">
-        $(document).ready(function(){
-         $("#transactions").DataTable({
-         "lengthMenu": [10, 20, 40, 100],
-         "searching": false 
-         });
+        $(document).ready(function () {
+            $('#bt').click(function () {
+                $("#transactions").table2excel({
+                    filename: "TRANSACTIONS.xls"
+                });
+            });
         });
 
-</script>
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#transactions").DataTable({
+                "lengthMenu": [10, 20, 40, 100],
+                "searching": false
+            });
+        });
+
+    </script>
 
 </body>
 
