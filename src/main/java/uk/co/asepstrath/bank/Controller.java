@@ -70,7 +70,16 @@ public class Controller {
         if (data.reverse(transactionID).contains("successfully")) {
             return new ModelAndView("reverseSuccess.hbs");
         } else {
-            return new ModelAndView("reverseFail.hbs");
+            return new ModelAndView("Fail.hbs");
+        }
+    }
+
+    @GET("/repeattransaction/{transactionid}")
+    public ModelAndView repeatTransactions(@PathParam("transactionid") @QueryParam String transactionID) {
+        if (data.repeat(transactionID).contains("successfully")) {
+            return new ModelAndView("repeatSuccess.hbs");
+        } else {
+            return new ModelAndView("Fail.hbs");
         }
     }
 

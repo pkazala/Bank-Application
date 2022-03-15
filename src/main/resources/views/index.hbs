@@ -84,13 +84,12 @@
   Form {
     float: left;
     text-align: center;
-    width: 40%;
+    width: 30%;
     background-color: #dfdfdf;
     border-radius: 10px;
     padding: 30px;
     height: 7%;
-    margin: 5%;
-    margin-top: 0;
+    margin: 1.6%;
   }
 
   input[type=text] {
@@ -142,6 +141,11 @@
       <input type="text" name="name" placeholder="ID of the transaction" value="">
       <input class="inputbut" type="submit" value="Reverse">
     </form>
+    <form name="repeatForm">
+      <label for="name">Repeat any transaction:</label><br>
+      <input type="text" name="name" placeholder="ID of the transaction" value="">
+      <input class="inputbut" type="submit" value="Repeat">
+    </form>
   </div>
   <script>
     var form = document.forms['accountForm'];
@@ -153,14 +157,23 @@
         this.submit();
       }
     }, false);
-  </script>
-  <script>
+
     var form = document.forms['reverseForm'];
 
     form.addEventListener('submit', function () {
       var testVal = this.elements['name'].value
       if (testVal) {
         this.action = "/reversetransaction/" + testVal;
+        this.submit();
+      }
+    }, false);
+
+    var form = document.forms['repeatForm'];
+
+    form.addEventListener('submit', function () {
+      var testVal = this.elements['name'].value
+      if (testVal) {
+        this.action = "/repeattransaction/" + testVal;
         this.submit();
       }
     }, false);

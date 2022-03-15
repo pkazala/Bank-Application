@@ -320,4 +320,7 @@ public class Dataface {
     public String reverse(String id){
         return ReverseTransaction.reverseTransaction(logger, dataSource, id);
     }
+    public String repeat(String id){
+        return RepeatTransaction.repeatTransaction(logger, dataSource, id);
+    }
 }
